@@ -13,12 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    tableviewmodel.cpp \
-    celldata.cpp
+    TableViewModel.cpp \
+    CellData.cpp \
+    MainWindow.cpp
 
-HEADERS  += mainwindow.h \
-    tableviewmodel.h \
-    celldata.h
+HEADERS  += \
+    CellData.h \
+    MainWindow.h \
+    TableViewModel.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    MainWindow.ui

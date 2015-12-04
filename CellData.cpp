@@ -1,4 +1,4 @@
-#include "celldata.h"
+#include "CellData.h"
 
 CellData::CellData()
 {

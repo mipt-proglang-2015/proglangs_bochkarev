@@ -1,4 +1,4 @@
-#include "tableviewmodel.h"
+#include "TableViewModel.h"
 
 #include <QFont>
 #include <QBrush>
@@ -11,12 +11,12 @@ TableViewModel::TableViewModel(QObject *parent) : QAbstractTableModel(parent)
 
 int TableViewModel::rowCount(const QModelIndex &) const
 {
-    return Rows;
+    return RowsCount;
 }
 
 int TableViewModel::columnCount(const QModelIndex &) const
 {
-    return Cols;
+    return ColsCount;
 }
 
 QVariant TableViewModel::data(const QModelIndex &index, int role) const
@@ -40,19 +40,17 @@ QVariant TableViewModel::data(const QModelIndex &index, int role) const
 
 bool TableViewModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-    if (role == Qt::EditRole)
-    {
+    if (role == Qt::EditRole) {
         //save value from editor to member m_gridData
         _gridData[index.row()][index.column()].rawValue = value.toString();
         //for presentation purposes only: build and emit a joined string
         QString result;
-        for(int row = 0; row < Rows; row++)
-        {
-            for(int col= 0; col < Cols; col++)
-            {
+        for(int row = 0; row < RowsCount; row++) {
+            for(int col= 0; col < ColsCount; col++) {
                 result += _gridData[row][col].rawValue + " ";
             }
         }
+
         emit editCompleted( result );
     }
     return true;
