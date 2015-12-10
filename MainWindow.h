@@ -22,9 +22,9 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *_ui;
 
-    TableViewModel *tableViewModel;
+    TableViewModel *_tableViewModel;
 };
 
 #endif // MAINWINDOW_H

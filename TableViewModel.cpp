@@ -2,6 +2,7 @@
 
 #include <QFont>
 #include <QBrush>
+#include <iostream>
 
 TableViewModel::TableViewModel()
 {}
@@ -54,6 +55,11 @@ bool TableViewModel::setData(const QModelIndex & index, const QVariant & value, 
         emit editCompleted( result );
     }
     return true;
+}
+
+void TableViewModel::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+    std::cout << "Hi";
 }
 
 Qt::ItemFlags TableViewModel::flags(const QModelIndex &) const

@@ -20,6 +20,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role);
     Qt::ItemFlags flags(const QModelIndex & index) const;
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
 private:
     CellData _gridData[RowsCount][ColsCount];  // holds text entered into QTableView

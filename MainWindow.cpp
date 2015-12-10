@@ -3,27 +3,30 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    _ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
 
-    tableViewModel = new TableViewModel(0);
-    ui->tableView->setModel(tableViewModel);
+    _tableViewModel = new TableViewModel(0);
+    _ui->tableView->setModel(_tableViewModel);
 
-    QObject::connect(tableViewModel, SIGNAL(editCompleted(QString)), this, SLOT(onTableViewEdit(QString)));
+//    _ui->toolButton
+//    QObject::connect(_ui->toolButton, SIGNAL(triggered(QAction*), )
+    QObject::connect(_tableViewModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(onTableViewEdit(QString)));
+    QObject::connect(_tableViewModel, SIGNAL(editCompleted(QString)), this, SLOT(onTableViewEdit(QString)));
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete _ui;
 }
 
 
 void MainWindow::onTableViewEdit(const QString &string)
 {
     if (string.length() == 0) {
-        ui->statusBar->clearMessage();
+        _ui->statusBar->clearMessage();
     } else {
-        ui->statusBar->showMessage(string);
+        _ui->statusBar->showMessage(string);
     }
 }
