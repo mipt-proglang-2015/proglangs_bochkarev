@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "TableViewModel.h"
+#include "common.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,14 +17,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
-private slots:
-    void onTableViewEdit(const QString& string);
-
+private Q_SLOTS:
+    void onTableViewCellDidEndEditing(const QString& string);
 
 private:
-    Ui::MainWindow *_ui;
+    void setupTableView();
 
+    Ui::MainWindow *_ui;
     TableViewModel *_tableViewModel;
 };
 

@@ -3,8 +3,9 @@
 
 #include <QAbstractTableModel>
 #include "CellData.h"
+#include "common.h"
 
-const int RowsCount = 256;
+const int RowsCount = 255;
 const int ColsCount = 26;
 
 class TableViewModel : public QAbstractTableModel
@@ -20,12 +21,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role);
     Qt::ItemFlags flags(const QModelIndex & index) const;
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
 private:
+    void processFormulaIfNeeded(const QString& value, const QModelIndex& index);
+
     CellData _gridData[RowsCount][ColsCount];  // holds text entered into QTableView
-signals:
-    void editCompleted(const QString &);
+Q_SIGNALS:
+    void tableViewCellDidEndEditing(const QString &);
 };
 
 #endif // TABLEVIEWMODEL_H

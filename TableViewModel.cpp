@@ -2,7 +2,8 @@
 
 #include <QFont>
 #include <QBrush>
-#include <iostream>
+#include <sstream>
+#include "common.h"
 
 TableViewModel::TableViewModel()
 {}
@@ -27,7 +28,7 @@ QVariant TableViewModel::data(const QModelIndex &index, int role) const
 
     switch(role) {
     case Qt::DisplayRole:
-        return _gridData[row][col].rawValue;
+        return _gridData[row][col].value;
         break;
     case Qt::FontRole:
         break;
@@ -42,27 +43,25 @@ QVariant TableViewModel::data(const QModelIndex &index, int role) const
 bool TableViewModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
     if (role == Qt::EditRole) {
-        //save value from editor to member m_gridData
-        _gridData[index.row()][index.column()].rawValue = value.toString();
-        //for presentation purposes only: build and emit a joined string
-        QString result;
-        for(int row = 0; row < RowsCount; row++) {
-            for(int col= 0; col < ColsCount; col++) {
-                result += _gridData[row][col].rawValue + " ";
-            }
-        }
-
-        emit editCompleted( result );
+        QString result = value.toString();
+        _gridData[index.row()][index.column()].rawValue = result;
+        _gridData[index.row()][index.column()].value = result;
+        processFormulaIfNeeded(result, index);
+        Q_EMIT tableViewCellDidEndEditing( result );
     }
     return true;
-}
-
-void TableViewModel::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
-{
-    std::cout << "Hi";
 }
 
 Qt::ItemFlags TableViewModel::flags(const QModelIndex &) const
 {
     return Qt::ItemIsSelectable |  Qt::ItemIsEditable | Qt::ItemIsEnabled;
+}
+
+void TableViewModel::processFormulaIfNeeded(const QString &value, const QModelIndex &index)
+{
+    if (value[0] == '=') {
+        _gridData[index.row()][index.column()].isFormula = true;
+        PythonValue result = PythonInterpreter::instance()->runSimpleString(value.mid(1, value.length() - 1));
+        _gridData[index.row()][index.column()].value = result.stringValue;
+    }
 }

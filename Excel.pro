@@ -11,16 +11,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Excel
 TEMPLATE = app
 
+# PYTHON
+CONFIG += no_keywords # Python redefines some qt keywords
+INCLUDEPATH += /usr/include/python2.7
+LIBS += -lpython2.7
+
+CONFIG += c++11
 
 SOURCES += main.cpp\
     TableViewModel.cpp \
-    CellData.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    PythonInterpreter.cpp
 
 HEADERS  += \
     CellData.h \
     MainWindow.h \
-    TableViewModel.h
+    TableViewModel.h \
+    PythonInterpreter.h \
+    common.h
 
 FORMS    += \
     MainWindow.ui

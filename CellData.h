@@ -3,14 +3,15 @@
 
 #include <QString>
 
-class CellData
+struct CellData
 {
-public:
-    CellData();
+    CellData() {
+        isFormula = false;
+    }
 
     QString value;
     QString rawValue;
-    bool isEditing;
+    bool isFormula;
 };
 
 #endif // CELLDATA_H

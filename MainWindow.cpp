@@ -6,14 +6,10 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui(new Ui::MainWindow)
 {
     _ui->setupUi(this);
-
-    _tableViewModel = new TableViewModel(0);
-    _ui->tableView->setModel(_tableViewModel);
+    setupTableView();
 
 //    _ui->toolButton
 //    QObject::connect(_ui->toolButton, SIGNAL(triggered(QAction*), )
-    QObject::connect(_tableViewModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(onTableViewEdit(QString)));
-    QObject::connect(_tableViewModel, SIGNAL(editCompleted(QString)), this, SLOT(onTableViewEdit(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -21,12 +17,16 @@ MainWindow::~MainWindow()
     delete _ui;
 }
 
-
-void MainWindow::onTableViewEdit(const QString &string)
+void MainWindow::onTableViewCellDidEndEditing(const QString &string)
 {
-    if (string.length() == 0) {
-        _ui->statusBar->clearMessage();
-    } else {
-        _ui->statusBar->showMessage(string);
-    }
+    _ui->statusBar->clearMessage();
+    _ui->statusBar->showMessage(string);
+}
+
+void MainWindow::setupTableView()
+{
+    _tableViewModel = new TableViewModel(0);
+    _ui->tableView->setModel(_tableViewModel);
+
+    QObject::connect(_tableViewModel, SIGNAL(tableViewCellDidEndEditing(QString)), this, SLOT(onTableViewCellDidEndEditing(QString)));
 }
