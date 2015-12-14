@@ -30,8 +30,6 @@ private:
     QStandardItemModel* _model;
     QTableView* _tableView;
     CellData _gridData[RowsCount][ColsCount];
-
-    bool _handleNextItemChange;
 };
 
 #endif // STANDARTMODELWRAPPER_H

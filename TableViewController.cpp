@@ -13,12 +13,10 @@ TableViewController::TableViewController(QObject *parent) :
 TableViewController::TableViewController(QTableView* tableView) : _tableView(tableView)
 {
     _tableView->setModel(createStandartItemModel());
-    _handleNextItemChange = true;
 
     // подписываемся на изменение текста ячейки
     QObject::connect(_model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(onTableViewItemChanged(QStandardItem*)));
-    // подписываемся на начало редактирования ячейки
-
+    // подписываемся на подсвечивание ячейки
     QItemSelectionModel* sm = _tableView->selectionModel();
     QObject::connect(sm, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(onTableViewDidSelectCell(QItemSelection,QItemSelection)));
 }
@@ -50,15 +48,10 @@ void TableViewController::onTableViewDidSelectCell(const QItemSelection& selecte
     QModelIndex selectedIndex = selected.indexes().first();
     qDebug() << "Selected cell rawValue" << _gridData[selectedIndex.row()][selectedIndex.column()].rawValue;
     Q_EMIT tableViewDidSelectCell(_gridData[selectedIndex.row()][selectedIndex.column()].rawValue);
-    _handleNextItemChange = true;
 }
 
 void TableViewController::onTableViewItemChanged(QStandardItem *item)
 {
-    if (!_handleNextItemChange) {
-        return;
-    }
-
     QString text = item->text();
 
     CellData cellData;
@@ -75,9 +68,11 @@ void TableViewController::onTableViewItemChanged(QStandardItem *item)
     interpreter->addVariable(varName, cellData.value);
 
     _gridData[item->row()][item->column()] = cellData;
-    _handleNextItemChange = false;
 
+    // отписываемся, чтобы повторно не вызвало данный метод
+    QObject::disconnect(_model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(onTableViewItemChanged(QStandardItem*)));
     item->setText(cellData.value);
+    QObject::connect(_model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(onTableViewItemChanged(QStandardItem*)));
 
     Q_EMIT tableViewCellDidEndEditing(text);
 }
