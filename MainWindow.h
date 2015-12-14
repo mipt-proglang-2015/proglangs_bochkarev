@@ -2,8 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "TableViewModel.h"
-#include "common.h"
+#include "TableViewController.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,12 +18,13 @@ public:
 
 private Q_SLOTS:
     void onTableViewCellDidEndEditing(const QString& string);
-
+    void onPythonInterpreterDidFail(const QString& msg);
+    void onToolButtonPress(bool checked);
 private:
-    void setupTableView();
+    void subscribeToSignals() const;
 
     Ui::MainWindow *_ui;
-    TableViewModel *_tableViewModel;
+    TableViewController *_tableViewController;
 };
 
 #endif // MAINWINDOW_H

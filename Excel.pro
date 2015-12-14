@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-10-04T15:17:24
+# Project created by QtCreator 2015-12-14T05:27:59
 #
 #-------------------------------------------------
 
@@ -12,23 +12,25 @@ TARGET = Excel
 TEMPLATE = app
 
 # PYTHON
-CONFIG += no_keywords # Python redefines some qt keywords
-INCLUDEPATH += /usr/include/python2.7
-LIBS += -lpython2.7
+CONFIG += no_keywords console  # Python redefines some qt keywords
+INCLUDEPATH += /usr/include/python3.4m
+LIBS += -lpython3.4m -lpthread -ldl -lutil -lm -Xlinker -export-dynamic
 
 CONFIG += c++11
 
-SOURCES += main.cpp\
-    TableViewModel.cpp \
+SOURCES += main.cpp \
+    InterpreterHandler.cpp \
     MainWindow.cpp \
-    PythonInterpreter.cpp
+    PythonInterpreter.cpp \
+    TableViewController.cpp
 
 HEADERS  += \
     CellData.h \
+    InterpreterHandler.h \
     MainWindow.h \
-    TableViewModel.h \
     PythonInterpreter.h \
-    common.h
+    TableViewController.h \
+    Exception.h
 
 FORMS    += \
     MainWindow.ui

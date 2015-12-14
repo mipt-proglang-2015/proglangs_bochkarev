@@ -5,10 +5,6 @@
 
 struct CellData
 {
-    CellData() {
-        isFormula = false;
-    }
-
     QString value;
     QString rawValue;
     bool isFormula;

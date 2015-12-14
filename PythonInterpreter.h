@@ -1,43 +1,33 @@
 #ifndef PYTHONINTERPRETER_H
 #define PYTHONINTERPRETER_H
+#include <QString>
+
+extern "C"
+{
+#include <Python.h>
+}
 
 #include <map>
-#include "common.h"
+#include <QObject>
 
-enum class PyValueType: int {
-    PyValueTypeInt,
-    PyValueTypeFloat,
-    PyValueTypeBool,
-    PyValueTypeLong,
-};
 
-struct PythonValue
+class PythonInterpreter: public QObject
 {
-    PyValueType type;
-
-    int intValue;
-    long long longValue;
-    float floatValue;
-    bool boolValue;
-
-    QString stringValue;
-};
-
-class PythonInterpreter
-{
+    Q_OBJECT
 public:
-    static PythonInterpreter* instance();
+    explicit PythonInterpreter(QObject *parent = 0);
 
-    QString loadProgram(const QString& path);
-    PythonValue evaluateFunction(const QString& method);
+    QString run(const QString &program);
+    void addVariable(const QString& name, const QString& value);
 
-    PythonValue runSimpleString(const QString& string) const;
-
+Q_SIGNALS:
+    void pythonInterpreterDidFail(const QString& errorMsg);
 private:
-    PythonInterpreter(){};
-    ~PythonInterpreter() {delete _instance;}
+    QString evaluateProgram(const QString &program);
 
-    static PythonInterpreter* _instance;
+    static std::map<QString, QString> _variables;
+    static PyObject* _mainModule;
+    static PyObject* _moduleDict;
 };
 
 #endif // PYTHONINTERPRETER_H
